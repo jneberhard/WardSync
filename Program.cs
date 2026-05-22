@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using WardSync.Components;
 using WardSync.Components.Account;
 using WardSync.Data;
+using WardSync.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+
+builder.Services.AddScoped<WardSyncService>();
 
 var app = builder.Build();
 

@@ -1,7 +1,77 @@
 ﻿@page "/"
+@inject WardSyncService Service
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>WardSync Dashboard</h1>
 
-Welcome to your new app.
+<div class="dashboard-grid">
+
+    <div class="card">
+        <h3>Open Assignments</h3>
+        <p class="stat">@openAssignments</p>
+    </div>
+
+    <div class="card">
+        <h3>Completed Assignments</h3>
+        <p class="stat">@completedAssignments</p>
+    </div>
+
+    <div class="card">
+        <h3>Overdue Items</h3>
+        <p class="stat overdue">@overdueAssignments</p>
+    </div>
+
+    <div class="card">
+        <h3>Open Callings</h3>
+        <p class="stat">@openCallings</p>
+    </div>
+
+</div>
+
+<h2>Upcoming Assignments</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Leader</th>
+            <th>Due Date</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var assignment in assignments.Take(5))
+        {
+            <tr>
+                <td>@assignment.Title</td>
+                <td>@assignment.AssignedLeader</td>
+                <td>@assignment.DueDate.ToShortDateString()</td>
+                <td>@assignment.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+
+    private List<AssignmentItem> assignments = new();
+    private List<Calling> callings = new();
+
+    private int openAssignments;
+    private int completedAssignments;
+    private int overdueAssignments;
+    private int openCallings;
+
+    protected override async Task OnInitializedAsync()
+    {
+        assignments = await Service.GetAssignmentsAsync();
+        callings = await Service.GetCallingsAsync();
+
+        openAssignments = assignments.Count(a => a.Status == "Open");
+        completedAssignments = assignments.Count(a => a.Status == "Completed");
+        overdueAssignments = assignments.Count(a => a.DueDate < DateTime.Today && a.Status != "Completed");
+        openCallings = callings.Count(c => c.Status == "Open");
+    }
+}
