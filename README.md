@@ -16,3 +16,9 @@ Section 8 - CSE 325
 *Charles Hemedi
 
 *Natnael Gashaw
+
+
+Passwords for testing:
+Username: admin@wardsync.com  Password: Admin123!
+Username: leader@wardsync.com	Password: Leader123!
+Username: viewer@wardsync.com	Password: Viewer123!
