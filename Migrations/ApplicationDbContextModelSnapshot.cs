@@ -2,7 +2,6 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WardSync.Data;
 
@@ -11,11 +10,9 @@ using WardSync.Data;
 namespace WardSync.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260526125527_AddIdentityRoles")]
-    partial class AddIdentityRoles
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "10.0.1");
@@ -242,6 +239,7 @@ namespace WardSync.Migrations
 
                     b.Property<string>("AssignedLeader")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("CompletionDate")
@@ -249,6 +247,7 @@ namespace WardSync.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("DueDate")
@@ -256,10 +255,12 @@ namespace WardSync.Migrations
 
                     b.Property<string>("Notes")
                         .IsRequired()
+                        .HasMaxLength(1000)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Organization")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Priority")
@@ -272,6 +273,7 @@ namespace WardSync.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -284,7 +286,7 @@ namespace WardSync.Migrations
                             Id = 1,
                             AssignedLeader = "James Carter",
                             Description = "Plan transport and refreshments for youth activity.",
-                            DueDate = new DateTime(2026, 5, 23, 0, 0, 0, 0, DateTimeKind.Local),
+                            DueDate = new DateTime(2026, 5, 27, 0, 0, 0, 0, DateTimeKind.Local),
                             Notes = "Confirm van availability.",
                             Organization = "Young Men",
                             Priority = "High",
@@ -296,7 +298,7 @@ namespace WardSync.Migrations
                             Id = 2,
                             AssignedLeader = "Sarah Johnson",
                             Description = "Follow up with sisters who haven't been contacted.",
-                            DueDate = new DateTime(2026, 6, 2, 0, 0, 0, 0, DateTimeKind.Local),
+                            DueDate = new DateTime(2026, 6, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             Notes = "",
                             Organization = "Relief Society",
                             Priority = "Medium",
@@ -307,9 +309,9 @@ namespace WardSync.Migrations
                         {
                             Id = 3,
                             AssignedLeader = "Tom Rivera",
-                            CompletionDate = new DateTime(2026, 5, 15, 0, 0, 0, 0, DateTimeKind.Local),
+                            CompletionDate = new DateTime(2026, 5, 19, 0, 0, 0, 0, DateTimeKind.Local),
                             Description = "Update weekly bulletin with new announcements.",
-                            DueDate = new DateTime(2026, 5, 16, 0, 0, 0, 0, DateTimeKind.Local),
+                            DueDate = new DateTime(2026, 5, 20, 0, 0, 0, 0, DateTimeKind.Local),
                             Notes = "",
                             Organization = "Bishopric",
                             Priority = "Low",
@@ -439,9 +441,9 @@ namespace WardSync.Migrations
                             Id = 1,
                             AssignedLeader = "James Carter",
                             CompletionNotes = "",
-                            DueDate = new DateTime(2026, 6, 2, 0, 0, 0, 0, DateTimeKind.Local),
+                            DueDate = new DateTime(2026, 6, 6, 0, 0, 0, 0, DateTimeKind.Local),
                             FollowUpItemTitle = "Ward Council Action Item",
-                            MeetingDate = new DateTime(2026, 5, 19, 0, 0, 0, 0, DateTimeKind.Local),
+                            MeetingDate = new DateTime(2026, 5, 23, 0, 0, 0, 0, DateTimeKind.Local),
                             PrivacyFlag = false,
                             RelatedFamily = "Sample Family",
                             Status = "Open"
@@ -451,9 +453,9 @@ namespace WardSync.Migrations
                             Id = 2,
                             AssignedLeader = "Sarah Johnson",
                             CompletionNotes = "",
-                            DueDate = new DateTime(2026, 5, 24, 0, 0, 0, 0, DateTimeKind.Local),
+                            DueDate = new DateTime(2026, 5, 28, 0, 0, 0, 0, DateTimeKind.Local),
                             FollowUpItemTitle = "Service Coordination",
-                            MeetingDate = new DateTime(2026, 5, 12, 0, 0, 0, 0, DateTimeKind.Local),
+                            MeetingDate = new DateTime(2026, 5, 16, 0, 0, 0, 0, DateTimeKind.Local),
                             PrivacyFlag = true,
                             RelatedFamily = "Sample Family B",
                             Status = "Open"
