@@ -17,8 +17,7 @@ Section 8 - CSE 325
 
 *Natnael Gashaw
 
-
-Passwords for testing:
+Passwords for demonstration purposes:
 
 Username: admin@wardsync.com  Password: Admin123!
 
