@@ -283,6 +283,11 @@ textarea {
     margin-top: 1.5rem;
 }
 
+.home-logout-form {
+    display: inline-flex;
+    margin: 0;
+}
+
 .home-button {
     display: inline-flex;
     min-height: 2.75rem;
@@ -293,6 +298,8 @@ textarea {
     border: 1px solid #cbd9e7;
     border-radius: 8px;
     color: var(--ws-blue-dark);
+    cursor: pointer;
+    font: inherit;
     font-weight: 800;
     text-align: center;
     text-decoration: none;

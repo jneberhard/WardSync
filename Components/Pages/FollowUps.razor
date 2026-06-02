@@ -1,33 +1,35 @@
 @page "/followups"
-@inject WardSyncService Service
+@rendermode InteractiveServer
+
 @attribute [Authorize(Roles = "Admin,Leader")]
+@inject WardSyncService Service
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
 <h1>Ward Council Follow-Up</h1>
 
-<EditForm Model="newFollowUp" OnValidSubmit="SaveFollowUp">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
-    <div class="form-grid">
-
-        <InputDate @bind-Value="newFollowUp.MeetingDate" />
-
-        <InputText @bind-Value="newFollowUp.FollowUpItemTitle"
-                   placeholder="Follow-Up Item" />
-
-        <InputText @bind-Value="newFollowUp.AssignedLeader"
-                   placeholder="Assigned Leader" />
-
-        <InputDate @bind-Value="newFollowUp.DueDate" />
-
-    </div>
-
-    <InputTextArea @bind-Value="newFollowUp.CompletionNotes"
-                   placeholder="Notes" />
-
-    <button class="btn-primary">Add Follow-Up</button>
-</EditForm>
+<div class="button-row">
+    <a class="btn-primary" href="/followups/create">
+        Create Follow-Up
+    </a>
+</div>
 
 <hr />
+
+<div class="filter-row">
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+
+        <InputText @bind-Value="searchText"
+                   placeholder="Search follow-ups..." />
+    </div>
+
+    <InputSelect @bind-Value="statusFilter">
+        <option value="">All Status</option>
+        <option value="Open">Open</option>
+        <option value="In Progress">In Progress</option>
+        <option value="Completed">Completed</option>
+    </InputSelect>
+</div>
 
 <table class="table">
     <thead>
@@ -37,11 +39,12 @@
             <th>Leader</th>
             <th>Due Date</th>
             <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
 
     <tbody>
-        @foreach (var item in followUps)
+        @foreach (var item in FilteredFollowUps)
         {
             <tr>
                 <td>@item.MeetingDate.ToShortDateString()</td>
@@ -49,41 +52,63 @@
                 <td>@item.AssignedLeader</td>
                 <td>@item.DueDate.ToShortDateString()</td>
                 <td>@item.Status</td>
+                <td>
+                    <a class="btn-view" href="/followups/details/@item.Id">View</a>
+                    <a class="btn-edit" href="/followups/edit/@item.Id">Edit</a>
+                    <a class="btn-delete" href="/followups/delete/@item.Id">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 
 @code {
-
     private List<FollowUpItem> followUps = new();
 
-    private FollowUpItem newFollowUp = new()
-    {
-        MeetingDate = DateTime.Today,
-        DueDate = DateTime.Today.AddDays(7)
-    };
+    private string searchText = string.Empty;
+
+    private string statusFilter = string.Empty;
+
+    private bool isAdmin;
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadData();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        isAdmin = authState.User.IsInRole("Admin");
+
+        await LoadFollowUps();
     }
 
-    private async Task LoadData()
+    private async Task LoadFollowUps()
     {
-        followUps = await Service.GetFollowUpsAsync();
+        var allFollowUps = await Service.GetFollowUpsAsync();
+
+        followUps = isAdmin
+            ? allFollowUps
+            : allFollowUps.Where(f => !f.PrivacyFlag).ToList();
     }
 
-    private async Task SaveFollowUp()
+    private IEnumerable<FollowUpItem> FilteredFollowUps
     {
-        await Service.AddFollowUpAsync(newFollowUp);
-
-        newFollowUp = new FollowUpItem()
+        get
         {
-            MeetingDate = DateTime.Today,
-            DueDate = DateTime.Today.AddDays(7)
-        };
+            var query = followUps.AsEnumerable();
 
-        await LoadData();
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                query = query.Where(f =>
+                    f.FollowUpItemTitle.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    f.AssignedLeader.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    f.RelatedFamily.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    f.Status.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                query = query.Where(f => f.Status == statusFilter);
+            }
+
+            return query.OrderBy(f => f.DueDate);
+        }
     }
 }

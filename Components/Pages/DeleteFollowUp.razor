@@ -1,0 +1,67 @@
+@page "/followups/delete/{id:int}"
+@rendermode InteractiveServer
+
+@attribute [Authorize(Roles = "Admin,Leader")]
+@inject WardSyncService Service
+@inject NavigationManager Navigation
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<h1>Delete Follow-Up</h1>
+
+@if (followUp is null)
+{
+    <p>Follow-up not found.</p>
+    <a class="btn-secondary" href="/followups">Back to Follow-Ups</a>
+}
+else
+{
+    <div class="confirm-box">
+        <p>Are you sure you want to delete this follow-up?</p>
+
+        <h2>@followUp.FollowUpItemTitle</h2>
+
+        <p><strong>Assigned Leader:</strong> @followUp.AssignedLeader</p>
+        <p><strong>Due Date:</strong> @followUp.DueDate.ToShortDateString()</p>
+        <p><strong>Status:</strong> @followUp.Status</p>
+
+        <div class="button-row">
+            <button type="button" class="btn-delete" @onclick="DeleteConfirmed">
+                Yes, Delete
+            </button>
+
+            <a class="btn-secondary" href="/followups">Cancel</a>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private FollowUpItem? followUp;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var isAdmin = authState.User.IsInRole("Admin");
+
+        var selectedFollowUp = await Service.GetFollowUpByIdAsync(Id);
+
+        if (selectedFollowUp is null || selectedFollowUp.PrivacyFlag && !isAdmin)
+        {
+            followUp = null;
+            return;
+        }
+
+        followUp = selectedFollowUp;
+    }
+
+    private async Task DeleteConfirmed()
+    {
+        if (followUp is not null)
+        {
+            await Service.DeleteFollowUpAsync(Id);
+            Navigation.NavigateTo("/followups");
+        }
+    }
+}

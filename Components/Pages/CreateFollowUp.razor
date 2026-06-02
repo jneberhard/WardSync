@@ -1,0 +1,56 @@
+@page "/followups/create"
+@rendermode InteractiveServer
+
+@attribute [Authorize(Roles = "Admin,Leader")]
+@inject WardSyncService Service
+@inject NavigationManager Navigation
+
+<h1>Create Follow-Up</h1>
+
+<EditForm Model="followUpForm"
+        OnValidSubmit="SaveFollowUp"
+        FormName="CreateFollowUpForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-grid">
+        <InputDate @bind-Value="followUpForm.MeetingDate" />
+        <InputText @bind-Value="followUpForm.FollowUpItemTitle" placeholder="Follow-Up Item" />
+        <InputText @bind-Value="followUpForm.AssignedLeader" placeholder="Assigned Leader" />
+        <InputText @bind-Value="followUpForm.RelatedFamily" placeholder="Related Family" />
+        <InputDate @bind-Value="followUpForm.DueDate" />
+
+        <InputSelect @bind-Value="followUpForm.Status">
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+        </InputSelect>
+    </div>
+
+    <div class="form-check mb-3">
+        <InputCheckbox class="form-check-input" @bind-Value="followUpForm.PrivacyFlag" />
+        <label class="form-check-label">Private follow-up</label>
+    </div>
+
+    <InputTextArea @bind-Value="followUpForm.CompletionNotes" placeholder="Completion Notes" />
+
+    <div class="button-row">
+        <button class="btn-primary" type="submit">+ Add Follow-Up</button>
+        <a class="btn-secondary" href="/followups">Cancel</a>
+    </div>
+</EditForm>
+
+@code {
+    private FollowUpItem followUpForm = new()
+    {
+        MeetingDate = DateTime.Today,
+        DueDate = DateTime.Today.AddDays(7),
+        Status = "Open"
+    };
+
+    private async Task SaveFollowUp()
+    {
+        await Service.AddFollowUpAsync(followUpForm);
+        Navigation.NavigateTo("/followups");
+    }
+}
