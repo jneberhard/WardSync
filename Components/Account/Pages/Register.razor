@@ -27,21 +27,51 @@
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="Input.Email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password"
+                                   @bind-Value="Input.Password"
+                                   id="password-field"
+                                   class="form-control"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="password" />
+                        <label for="password-field" class="form-label">Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-password-btn" onclick="togglePasswordVisibility('password-field', 'toggle-password-btn')" style="z-index: 5;">
+                        Show
+                    </button>
+                </div>
+                <ValidationMessage For="() => Input.Password" class="text-danger mt-1" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password"
+                                   @bind-Value="Input.ConfirmPassword"
+                                   id="confirm-password-field"
+                                   class="form-control"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="confirm password" />
+                        <label for="confirm-password-field" class="form-label">Confirm Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary" type="button" id="toggle-confirm-btn" onclick="togglePasswordVisibility('confirm-password-field', 'toggle-confirm-btn')" style="z-index: 5;">
+                        Show
+                    </button>
+                </div>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger mt-1" />
             </div>
+
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
@@ -150,3 +180,20 @@
         public string ConfirmPassword { get; set; } = "";
     }
 }
+
+<script>
+    function togglePasswordVisibility(fieldId, buttonId) {
+        const passwordField = document.getElementById(fieldId);
+        const toggleBtn = document.getElementById(buttonId);
+
+        if (passwordField && toggleBtn) {
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleBtn.textContent = 'Hide';
+            } else {
+                passwordField.type = 'password';
+                toggleBtn.textContent = 'Show';
+            }
+        }
+    }
+</script>

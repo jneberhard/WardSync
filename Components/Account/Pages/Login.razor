@@ -23,16 +23,26 @@
                 <h2>Use a local account to log in.</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
+
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
                     <label for="Input.Email" class="form-label">Email</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="Input.Password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+
+                <div class="mb-3">
+                    <div class="input-group">
+                        <div class="form-floating flex-grow-1">
+                            <InputText type="password" @bind-Value="Input.Password" id="password-field" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label for="password-field" class="form-label">Password</label>
+                        </div>
+                        <button class="btn btn-outline-secondary" type="button" id="toggle-btn" onclick="togglePasswordVisibility()" style="z-index: 5;">
+                            Show
+                        </button>
+                    </div>
+                    <ValidationMessage For="() => Input.Password" class="text-danger mt-1" />
                 </div>
+
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
@@ -74,6 +84,16 @@
 @code {
     private string? errorMessage;
     private EditContext editContext = default!;
+
+    private bool showPassword = false;
+
+    private string PasswordInputType =>
+        showPassword ? "text" : "password";
+
+    private void TogglePassword()
+    {
+        showPassword = !showPassword;
+    }
 
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
@@ -127,7 +147,7 @@
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
-            RedirectManager.RedirectTo(ReturnUrl);
+            RedirectManager.RedirectTo("/");
         }
         else if (result.RequiresTwoFactor)
         {
@@ -162,3 +182,18 @@
         public PasskeyInputModel? Passkey { get; set; }
     }
 }
+
+<script>
+    function togglePasswordVisibility() {
+        const passwordField = document.getElementById('password-field');
+        const toggleBtn = document.getElementById('toggle-btn');
+
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text';
+            toggleBtn.textContent = 'Hide';
+        } else {
+            passwordField.type = 'password';
+            toggleBtn.textContent = 'Show';
+        }
+    }
+</script>
