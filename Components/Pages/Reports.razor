@@ -7,31 +7,6 @@
 
 <h1>Reports</h1>
 
-
-
-<div class="dashboard-grid">
-    <div class="card">
-        <h3>Open Callings</h3>
-        <p class="stat">@openCallings.Count</p>
-    </div>
-    <div class="card">
-        <h3>Callings Need Follow-Up</h3>
-        <p class="stat overdue">@callingsNeedingFollowUp.Count</p>
-    </div>
-    <div class="card">
-        <h3>Overdue Assignments</h3>
-        <p class="stat overdue">@overdueAssignments.Count</p>
-    </div>
-    <div class="card">
-        <h3>Completed Assignments</h3>
-        <p class="stat">@completedAssignments.Count</p>
-    </div>
-    <div class="card">
-        <h3>Overdue Follow-Ups</h3>
-        <p class="stat overdue">@overdueFollowUps.Count</p>
-    </div>
-</div>
-
 <h2>Open Callings</h2>
 
 @if (openCallings.Count == 0)
