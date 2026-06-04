@@ -17,6 +17,13 @@ Section 8 - CSE 325
 
 *Natnael Gashaw
 
+Passwords for demonstration purposes:
+
+Username: admin@wardsync.com  Password: Admin123!
+
+Username: leader@wardsync.com	Password: Leader123!
+
+Username: viewer@wardsync.com	Password: Viewer123!
 
 # Overview
 

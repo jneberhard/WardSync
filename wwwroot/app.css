@@ -92,14 +92,14 @@ h1:focus {
     border-color: #7b8794;
 }
 
-.form-floating > .form-control-plaintext::placeholder,
-.form-floating > .form-control::placeholder {
+.form-floating>.form-control-plaintext::placeholder,
+.form-floating>.form-control::placeholder {
     color: var(--bs-secondary-color);
     text-align: end;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder,
-.form-floating > .form-control:focus::placeholder {
+.form-floating>.form-control-plaintext:focus::placeholder,
+.form-floating>.form-control:focus::placeholder {
     text-align: start;
 }
 
@@ -174,7 +174,7 @@ textarea {
     color: var(--ws-white);
     cursor: pointer;
     font-weight: 700;
-    padding: 0.8rem 1.5rem;
+    padding: 0;
 }
 
 .btn-primary:hover,
@@ -242,6 +242,7 @@ textarea {
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 14px;
     box-shadow: 0 18px 38px rgba(4, 19, 34, 0.28);
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
 }
 
@@ -282,6 +283,11 @@ textarea {
     margin-top: 1.5rem;
 }
 
+.home-logout-form {
+    display: inline-flex;
+    margin: 0;
+}
+
 .home-button {
     display: inline-flex;
     min-height: 2.75rem;
@@ -292,6 +298,8 @@ textarea {
     border: 1px solid #cbd9e7;
     border-radius: 8px;
     color: var(--ws-blue-dark);
+    cursor: pointer;
+    font: inherit;
     font-weight: 800;
     text-align: center;
     text-decoration: none;
@@ -625,6 +633,7 @@ textarea {
 }
 
 @media (max-width: 1100px) {
+
     .feature-grid,
     .hero-stat-grid,
     .target-user-list {
@@ -675,4 +684,335 @@ textarea {
         display: block;
         overflow-x: auto;
     }
+}
+
+.btn-secondary {
+    background: var(--ws-gray-600);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 0;
+}
+
+.btn-view {
+    background: var(--ws-gray-600);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-weight: 600;
+
+    min-width: 100px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-decoration: none;
+}
+
+.btn-view:hover,
+.btn-view:focus {
+    background: var(--ws-green);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background: var(--ws-gray-800);
+}
+
+.btn-edit {
+    background: var(--ws-blue);
+    border: none;
+    border-radius: 6px;
+    color: var(--ws-white);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    margin-right: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+    background: var(--ws-blue-dark);
+    transform: translateY(-1px);
+}
+
+.btn-delete {
+    background: var(--ws-danger);
+    border: none;
+    border-radius: 6px;
+    color: var(--ws-white);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    transition: all 0.2s ease;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+    background: #8b1a12;
+    transform: translateY(-1px);
+}
+
+.button-row,
+.filter-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-row input,
+.filter-row select {
+    max-width: 280px;
+}
+
+.confirm-box {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(15, 39, 66, 0.85);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--ws-white);
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(15, 39, 66, 0.2);
+    max-width: 500px;
+    width: 90%;
+    padding: 1.5rem;
+    animation: modalSlideIn 0.2s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    color: var(--ws-navy);
+}
+
+.modal-content p {
+    margin: 1rem 0;
+    line-height: 1.5;
+}
+
+.form-grid label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0;
+}
+
+.table td:last-child {
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .table td:last-child {
+        display: flex;
+        gap: 0.5rem;
+        white-space: normal;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+.card:first-child {
+    transition: all 0.2s ease;
+}
+
+input[type="date"] {
+    padding: 0.75rem;
+}
+
+textarea {
+    font-family: inherit;
+    resize: vertical;
+}
+
+.validation-summary-errors {
+    background: #fde7e4;
+    border-left: 4px solid var(--ws-danger);
+    border-radius: 8px;
+    color: #7a271a;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+}
+
+.validation-summary-errors ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.field-validation-error {
+    color: var(--ws-danger);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+/* ==================================================
+    WARDSYNC STANDARD ACTION BUTTONS
+   ================================================== */
+
+.btn-primary,
+.btn-secondary,
+.btn-edit,
+.btn-delete {
+    min-width: 120px;
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+    text-decoration: none;
+
+    font-weight: 700;
+    color: white;
+
+    box-sizing: border-box;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-edit:hover,
+.btn-edit:focus,
+.btn-delete:hover,
+.btn-delete:focus {
+    background: var(--ws-green);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.table td a,
+.table td button {
+    margin-right: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.btn-primary:visited,
+.btn-secondary:visited,
+.btn-edit:visited,
+.btn-delete:visited {
+    color: white;
+}
+
+/* Larger navigation/form buttons */
+
+.btn-primary,
+.btn-secondary {
+    min-width: 220px;
+}
+
+/* Keep action buttons compact */
+.btn-view,
+.btn-edit,
+.btn-delete {
+    min-width: 100px;
+}
+
+.search-box {
+    position: relative;
+    width: 320px;
+}
+
+.search-box input {
+    padding-left: 40px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ws-gray-600);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--ws-navy);
+}
+
+.date-section {
+    margin-top: 1rem;
+}
+
+.validation-summary-errors {
+    background: #fde7e4;
+    border-left: 4px solid var(--ws-danger);
+    border-radius: 8px;
+    color: #7a271a;
+    margin-bottom: 1.5rem;
+    padding: 0.75rem 1rem;
+}
+
+.validation-summary-errors ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.validation-summary-errors li {
+    margin: 0.25rem 0;
+}
+
+.validation-message {
+    color: var(--ws-danger);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: block;
+}
+
+.input-validation-error {
+    border-color: var(--ws-danger) !important;
 }

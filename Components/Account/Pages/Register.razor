@@ -20,6 +20,8 @@
 <h1>Register</h1>
 
 <div class="row">
+
+    @* Register Form *@
     <div class="col-lg-6">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" method="post" OnValidSubmit="RegisterUser" FormName="register">
@@ -27,24 +29,64 @@
             <h2>Create a new account.</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+
+            @* Email Input Field *@
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label for="Input.Email">Email</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.Password">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger" />
+
+            @* Password Input Field with Interactive Show/Hide Icon *@
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password"
+                                   @bind-Value="Input.Password"
+                                   id="password-field"
+                                   class="form-control"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="password" />
+                        <label for="password-field" class="form-label">Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary"
+                                type="button"
+                                aria-label="Toggle password visibility"
+                                onclick="togglePasswordVisibility('password-field', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                </div>
+                <ValidationMessage For="() => Input.Password" class="text-danger mt-1" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" id="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="Input.ConfirmPassword">Confirm Password</label>
-                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+
+            @* Confirm Password Input Field with Interactive Show/Hide Icon *@
+            <div class="mb-3">
+                <div class="input-group">
+                    <div class="form-floating flex-grow-1">
+                        <InputText type="password"
+                                   @bind-Value="Input.ConfirmPassword"
+                                   id="confirm-password-field"
+                                   class="form-control"
+                                   autocomplete="new-password"
+                                   aria-required="true"
+                                   placeholder="confirm password" />
+                        <label for="confirm-password-field" class="form-label">Confirm Password</label>
+                    </div>
+                    <button class="btn btn-outline-secondary"
+                            type="button"
+                            aria-label="Toggle password visibility"
+                            onclick="togglePasswordVisibility('confirm-password-field', this)">
+                        <i class="bi bi-eye"></i>
+                    </button>
+                </div>
+                <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger mt-1" />
             </div>
+
             <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </EditForm>
     </div>
+    @* Commented out until we configure external authentication providers
     <div class="col-lg-4 col-lg-offset-2">
         <section>
             <h3>Use another service to register.</h3>
@@ -52,6 +94,7 @@
             <ExternalLoginPicker />
         </section>
     </div>
+    *@
 </div>
 
 @code {

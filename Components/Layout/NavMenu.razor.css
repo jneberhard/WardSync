@@ -81,7 +81,7 @@
     padding: 1rem 0 1.25rem;
 }
 
-.navbar-toggler:checked ~ .nav-scrollable {
+.navbar-toggler:checked~.nav-scrollable {
     display: block;
 }
 
@@ -156,6 +156,10 @@
 
 .bi-house-door-fill-nav-menu::before {
     content: "H";
+}
+
+.bi-dashboard-nav-menu::before {
+    content: "D";
 }
 
 .bi-callings-nav-menu::before {

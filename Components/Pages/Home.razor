@@ -5,8 +5,8 @@
 <div class="home-page">
     <section class="home-hero" aria-labelledby="home-title">
         <img src="/images/WardSync_picture.webp"
-             alt="Latter-day Saint meetinghouse with red brick, white steeple, lawn, and blue sky"
-             class="hero-meetinghouse-image" />
+            alt="Latter-day Saint meetinghouse with red brick, white steeple, lawn, and blue sky"
+            class="hero-meetinghouse-image" />
 
         <div class="home-hero-overlay">
             <div class="home-hero-text">
@@ -19,14 +19,49 @@
                     organize and follow through on.
                 </p>
 
-                <nav class="home-actions" aria-label="Primary home page links">
-                    <a class="home-button home-button-primary" href="/callings">Callings</a>
-                    <a class="home-button" href="/assignments">Assignments</a>
-                    <a class="home-button" href="/followups">Follow-Up</a>
-                    <a class="home-button" href="/members">Members</a>
-                    <a class="home-button" href="/reports">Reports</a>
-                    <a class="home-button home-button-login" href="/login">Login</a>
-                </nav>
+                <AuthorizeView Context="homeAuth">
+                    <Authorized>
+                        <nav class="home-actions" aria-label="Primary home page links">
+                            <AuthorizeView Roles="Admin" Context="adminAuth">
+                                <Authorized>
+                                    <a class="home-button home-button-primary" href="/callings">Callings</a>
+                                    <a class="home-button" href="/dashboard">Dashboard</a>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <AuthorizeView Roles="Admin,Leader" Context="leaderAuth">
+                                <Authorized>
+                                    <a class="home-button" href="/assignments">Assignments</a>
+                                    <a class="home-button" href="/followups">Follow-Up</a>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <AuthorizeView Roles="Admin,Leader,Viewer" Context="viewerAuth">
+                                <Authorized>
+                                    <a class="home-button" href="/members">Members</a>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <AuthorizeView Roles="Admin" Context="reportAuth">
+                                <Authorized>
+                                    <a class="home-button" href="/reports">Reports</a>
+                                </Authorized>
+                            </AuthorizeView>
+
+                            <form class="home-logout-form" action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="" />
+                                <button type="submit" class="home-button home-button-login">Log Out</button>
+                            </form>
+                        </nav>
+                    </Authorized>
+                    <NotAuthorized>
+                        <nav class="home-actions" aria-label="Primary home page links">
+                            <a class="home-button home-button-primary" href="/Account/Login">Login</a>
+                            <a class="home-button" href="/Account/Register">Register</a>
+                        </nav>
+                    </NotAuthorized>
+                </AuthorizeView>
             </div>
         </div>
     </section>
