@@ -10,21 +10,53 @@
 <EditForm Model="followUpForm"
         OnValidSubmit="SaveFollowUp"
         FormName="CreateFollowUpForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+    @if (!string.IsNullOrWhiteSpace(validationMessage))
+    {
+        <div class="alert">
+            @validationMessage
+        </div>
+    }
 
     <div class="form-grid">
-        <InputDate @bind-Value="followUpForm.MeetingDate" />
-        <InputText @bind-Value="followUpForm.FollowUpItemTitle" placeholder="Follow-Up Item" />
-        <InputText @bind-Value="followUpForm.AssignedLeader" placeholder="Assigned Leader" />
-        <InputText @bind-Value="followUpForm.RelatedFamily" placeholder="Related Family" />
-        <InputDate @bind-Value="followUpForm.DueDate" />
+        <div class="form-field">
+            <label>Meeting Date</label>
+            <InputDate @bind-Value="followUpForm.MeetingDate" />
+            <small class="text-muted">Date this follow-up came from a meeting.</small>
+        </div>
 
-        <InputSelect @bind-Value="followUpForm.Status">
-            <option value="Open">Open</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Completed">Completed</option>
-        </InputSelect>
+        <div class="form-field">
+            <label>Follow-Up Item</label>
+            <InputText @bind-Value="followUpForm.FollowUpItemTitle" placeholder="Follow-Up Item" />
+            <small class="text-muted">What needs to be followed up on.</small>
+        </div>
+
+        <div class="form-field">
+            <label>Assigned Leader</label>
+            <InputText @bind-Value="followUpForm.AssignedLeader" placeholder="Assigned Leader" />
+            <small class="text-muted">Who is responsible for this follow-up.</small>
+        </div>
+
+        <div class="form-field">
+            <label>Related Family / Household</label>
+            <InputText @bind-Value="followUpForm.RelatedFamily" placeholder="Related Family / Household" />
+            <small class="text-muted">Family or household connected to this follow-up.</small>
+        </div>
+
+        <div class="form-field">
+            <label>Due Date</label>
+            <InputDate @bind-Value="followUpForm.DueDate" />
+            <small class="text-muted">When this follow-up should be completed.</small>
+        </div>
+
+        <div class="form-field">
+            <label>Status</label>
+            <InputSelect @bind-Value="followUpForm.Status">
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </InputSelect>
+            <small class="text-muted">Current progress.</small>
+        </div>
     </div>
 
     <div class="form-check mb-3">
@@ -48,9 +80,38 @@
         Status = "Open"
     };
 
+    private string validationMessage = string.Empty;
+
     private async Task SaveFollowUp()
     {
+        validationMessage = ValidateFollowUp(followUpForm);
+
+        if (!string.IsNullOrWhiteSpace(validationMessage))
+        {
+            return;
+        }
+
         await Service.AddFollowUpAsync(followUpForm);
         Navigation.NavigateTo("/followups");
+    }
+
+    private static string ValidateFollowUp(FollowUpItem followUp)
+    {
+        if (string.IsNullOrWhiteSpace(followUp.FollowUpItemTitle))
+        {
+            return "Follow-up item is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(followUp.AssignedLeader))
+        {
+            return "Assigned leader is required.";
+        }
+
+        if (string.IsNullOrWhiteSpace(followUp.Status))
+        {
+            return "Status is required.";
+        }
+
+        return string.Empty;
     }
 }

@@ -55,7 +55,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Description = "Plan transport and refreshments for youth activity.",
                 AssignedLeader = "James Carter",
                 Organization = "Young Men",
-                DueDate = DateTime.Today.AddDays(-3),
+                DueDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Local),
                 Priority = "High",
                 Status = "Open",
                 Notes = "Confirm van availability."
@@ -67,7 +67,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Description = "Follow up with sisters who haven't been contacted.",
                 AssignedLeader = "Sarah Johnson",
                 Organization = "Relief Society",
-                DueDate = DateTime.Today.AddDays(7),
+                DueDate = new DateTime(2026, 6, 6, 0, 0, 0, DateTimeKind.Local),
                 Priority = "Medium",
                 Status = "Open"
             },
@@ -78,10 +78,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
                 Description = "Update weekly bulletin with new announcements.",
                 AssignedLeader = "Tom Rivera",
                 Organization = "Bishopric",
-                DueDate = DateTime.Today.AddDays(-10),
+                DueDate = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Local),
                 Priority = "Low",
                 Status = "Completed",
-                CompletionDate = DateTime.Today.AddDays(-11)
+                CompletionDate = new DateTime(2026, 5, 19, 0, 0, 0, DateTimeKind.Local)
             }
         );
 
@@ -89,11 +89,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             new FollowUpItem
             {
                 Id = 1,
-                MeetingDate = DateTime.Today.AddDays(-7),
+                MeetingDate = new DateTime(2026, 5, 23, 0, 0, 0, DateTimeKind.Local),
                 FollowUpItemTitle = "Ward Council Action Item",
                 AssignedLeader = "James Carter",
                 RelatedFamily = "Sample Family",
-                DueDate = DateTime.Today.AddDays(7),
+                DueDate = new DateTime(2026, 6, 6, 0, 0, 0, DateTimeKind.Local),
                 Status = "Open",
                 PrivacyFlag = false,
                 CompletionNotes = ""
@@ -101,11 +101,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             new FollowUpItem
             {
                 Id = 2,
-                MeetingDate = DateTime.Today.AddDays(-14),
+                MeetingDate = new DateTime(2026, 5, 16, 0, 0, 0, DateTimeKind.Local),
                 FollowUpItemTitle = "Service Coordination",
                 AssignedLeader = "Sarah Johnson",
                 RelatedFamily = "Sample Family B",
-                DueDate = DateTime.Today.AddDays(-2),
+                DueDate = new DateTime(2026, 5, 28, 0, 0, 0, DateTimeKind.Local),
                 Status = "Open",
                 PrivacyFlag = true,
                 CompletionNotes = ""
