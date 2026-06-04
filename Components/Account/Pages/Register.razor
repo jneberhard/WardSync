@@ -46,9 +46,12 @@
                                    placeholder="password" />
                         <label for="password-field" class="form-label">Password</label>
                     </div>
-                    <button class="btn btn-outline-secondary" type="button" id="toggle-password-btn" onclick="togglePasswordVisibility('password-field', 'toggle-password-btn')" style="z-index: 5;">
-                        Show
-                    </button>
+                    <button class="btn btn-outline-secondary"
+                                type="button"
+                                aria-label="Toggle password visibility"
+                                onclick="togglePasswordVisibility('password-field', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
                 </div>
                 <ValidationMessage For="() => Input.Password" class="text-danger mt-1" />
             </div>
@@ -65,9 +68,12 @@
                                    placeholder="confirm password" />
                         <label for="confirm-password-field" class="form-label">Confirm Password</label>
                     </div>
-                    <button class="btn btn-outline-secondary" type="button" id="toggle-confirm-btn" onclick="togglePasswordVisibility('confirm-password-field', 'toggle-confirm-btn')" style="z-index: 5;">
-                        Show
-                    </button>
+                    <button class="btn btn-outline-secondary"
+                                type="button"
+                                aria-label="Toggle password visibility"
+                                onclick="togglePasswordVisibility('password-field', this)">
+                            <i class="bi bi-eye"></i>
+                        </button>
                 </div>
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger mt-1" />
             </div>
@@ -180,20 +186,3 @@
         public string ConfirmPassword { get; set; } = "";
     }
 }
-
-<script>
-    function togglePasswordVisibility(fieldId, buttonId) {
-        const passwordField = document.getElementById(fieldId);
-        const toggleBtn = document.getElementById(buttonId);
-
-        if (passwordField && toggleBtn) {
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text';
-                toggleBtn.textContent = 'Hide';
-            } else {
-                passwordField.type = 'password';
-                toggleBtn.textContent = 'Show';
-            }
-        }
-    }
-</script>
