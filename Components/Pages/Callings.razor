@@ -102,6 +102,22 @@
     <button class="btn-secondary" @onclick="RefreshData" style="margin-left: 0.5rem;">Refresh</button>
 </div>
 
+<!-- Filter Row - Added like assignments page -->
+<div class="filter-row">
+    <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <InputText @bind-Value="searchText"
+                   placeholder="Search callings..." />
+    </div>
+
+    <InputSelect @bind-Value="statusFilter">
+        <option value="">All Status</option>
+        <option value="Open">Open</option>
+        <option value="Filled">Filled</option>
+        <option value="Released">Released</option>
+    </InputSelect>
+</div>
+
 @if (isLoading)
 {
     <div class="loading">
@@ -114,7 +130,7 @@ else if (errorMessage != null)
         <p><strong>Error:</strong> @errorMessage</p>
     </div>
 }
-else if (callings.Any())
+else if (FilteredCallings.Any())
 {
     <div class="table-responsive">
         <table class="table">
@@ -133,7 +149,7 @@ else if (callings.Any())
                 </tr>
             </thead>
             <tbody>
-                @foreach (var calling in callings)
+                @foreach (var calling in FilteredCallings)
                 {
                     <tr>
                         <td>@calling.Title</td
@@ -155,7 +171,7 @@ else if (callings.Any())
         </table>
     </div>
     <div class="alert alert-info">
-        <small>Total callings: @callings.Count</small>
+        <small>Total callings: @FilteredCallings.Count() (filtered from @callings.Count total)</small>
     </div>
 }
 else
@@ -192,6 +208,9 @@ else
     private bool formError = false;
     private List<string> validationErrors = new();
     private string? errorMessage = null;
+    
+    private string searchText = string.Empty;
+    private string statusFilter = string.Empty;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -224,6 +243,31 @@ else
             errorMessage = ex.Message;
             isLoading = false;
             StateHasChanged();
+        }
+    }
+
+    private IEnumerable<Calling> FilteredCallings
+    {
+        get
+        {
+            var query = callings.AsEnumerable();
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                query = query.Where(c =>
+                    c.Title.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    c.Organization.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    c.MemberAssigned.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    c.Status.Contains(searchText, StringComparison.OrdinalIgnoreCase) ||
+                    c.Notes.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrWhiteSpace(statusFilter))
+            {
+                query = query.Where(c => c.Status == statusFilter);
+            }
+
+            return query.OrderBy(c => c.Title);
         }
     }
 
