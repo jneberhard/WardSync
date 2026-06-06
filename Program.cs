@@ -41,6 +41,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 builder.Services.AddScoped<WardSyncService>();
+builder.Services.AddScoped<CalendarExportService>();
 
 var app = builder.Build();
 
@@ -68,5 +69,29 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 await IdentitySeedData.SeedRolesAndUsersAsync(app.Services);
+
+app.MapGet("/assignments/calendar/{id:int}", async (
+    int id,
+    WardSyncService wardSyncService,
+    CalendarExportService calendarService) =>
+{
+    var assignment = await wardSyncService.GetAssignmentByIdAsync(id);
+
+    if (assignment is null)
+    {
+        return Results.NotFound();
+    }
+
+    var calendarContent =
+        calendarService.CreateAssignmentCalendarFile(assignment);
+
+    var fileName =
+        $"WardSync-Assignment-{assignment.Id}.ics";
+
+    return Results.File(
+        System.Text.Encoding.UTF8.GetBytes(calendarContent),
+        "text/calendar",
+        fileName);
+});
 
 app.Run();
