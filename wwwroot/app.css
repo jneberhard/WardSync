@@ -81,6 +81,11 @@ h1:focus {
     margin-top: 1rem;
 }
 
+.breadcrumb-item.active {
+    font-weight: 800;
+    color: var(--ws-blue-dark);
+}
+
 .blazor-error-boundary {
     background: var(--ws-danger);
     border-radius: 8px;
