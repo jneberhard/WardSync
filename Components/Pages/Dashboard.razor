@@ -1,4 +1,8 @@
 @page "/dashboard"
+
+
+@rendermode InteractiveServer
+
 @inject WardSyncService Service
 
 <PageTitle>Dashboard</PageTitle>
@@ -54,6 +58,28 @@
     </tbody>
 </table>
 
+@if (ShowNotification)
+{
+    <div class="modal-overlay">
+        <div class="modal-box">
+            <h3>Task Reminder</h3>
+
+            <p>You currently have:</p>
+
+            <ul>
+                <li>@PendingAssignments pending assignments</li>
+                <li>@OverdueAssignments overdue assignments</li>
+                <li>@FollowUpsNeeded follow-up items</li>
+            </ul>
+
+            <button class="btn btn-primary"
+                    @onclick="() => ShowNotification = false">
+                OK
+            </button>
+        </div>
+    </div>
+}
+
 @code {
 
     private List<AssignmentItem> assignments = new();
@@ -64,6 +90,11 @@
     private int overdueAssignments;
     private int openCallings;
 
+    private bool ShowNotification { get; set; }
+    private int PendingAssignments { get; set; }
+    private int OverdueAssignments { get; set; }
+    private int FollowUpsNeeded { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         assignments = await Service.GetAssignmentsAsync();
@@ -71,7 +102,26 @@
 
         openAssignments = assignments.Count(a => a.Status == "Open");
         completedAssignments = assignments.Count(a => a.Status == "Completed");
-        overdueAssignments = assignments.Count(a => a.DueDate < DateTime.Today && a.Status != "Completed");
+        overdueAssignments = assignments.Count(a =>
+            a.DueDate < DateTime.Today &&
+            a.Status != "Completed");
+
         openCallings = callings.Count(c => c.Status == "Open");
+
+        PendingAssignments = openAssignments;
+        OverdueAssignments = overdueAssignments;
+        FollowUpsNeeded = 0;
+
+        ShowNotification =
+            PendingAssignments > 0 ||
+            OverdueAssignments > 0 ||
+            FollowUpsNeeded > 0;
+    }
+
+    private async Task CloseNotification()
+    {
+        ShowNotification = false;
+        await InvokeAsync(StateHasChanged);
     }
 }
+

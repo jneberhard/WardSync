@@ -6,7 +6,9 @@ using WardSync.Components.Account;
 using WardSync.Data;
 using WardSync.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -44,6 +46,7 @@ builder.Services.AddScoped<WardSyncService>();
 
 var app = builder.Build();
 
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -68,5 +71,6 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 await IdentitySeedData.SeedRolesAndUsersAsync(app.Services);
+
 
 app.Run();
