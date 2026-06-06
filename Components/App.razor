@@ -20,26 +20,25 @@
     <ReconnectModal />
     <script src="@Assets["_framework/blazor.web.js"]"></script>
     <script src="@Assets["Components/Account/Shared/PasskeySubmit.razor.js"]" type="module"></script>
-    <script src="_framework/blazor.web.js"></script>
 
     <script>
         // JS function to toggle password visibility on login and register pages
         function togglePasswordVisibility(fieldId, buttonElement) {
-            const passwordField = document.getElementById(fieldId);
-            // Find the <i> icon inside the clicked button
-            const icon = buttonElement.querySelector('i');
+        const passwordField = document.getElementById(fieldId);
+        // Find the <i> icon inside the clicked button
+        const icon = buttonElement.querySelector('i');
 
-            if (passwordField && icon) {
-                if (passwordField.type === 'password') {
-                    passwordField.type = 'text';
-                    // Change icon to eye with a slash
-                    icon.className = 'bi bi-eye-slash';
-                } else {
-                    passwordField.type = 'password';
-                    // Change icon back to regular eye
-                    icon.className = 'bi bi-eye';
-                }
-            }
+        if (passwordField && icon) {
+        if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        // Change icon to eye with a slash
+        icon.className = 'bi bi-eye-slash';
+        } else {
+        passwordField.type = 'password';
+        // Change icon back to regular eye
+        icon.className = 'bi bi-eye';
+        }
+        }
         }
     </script>
 </body>
