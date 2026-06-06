@@ -199,25 +199,29 @@
     }
 }
 
-@if (ShowNotification)
-{
-    <div class="modal-overlay">
-        <div class="modal-box">
-            <h3>Task Reminder</h3>
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        @if (ShowNotification)
+        {
+            <div class="modal-overlay">
+                <div class="modal-box">
+                    <h3>Task Reminder</h3>
 
-            <p>You currently have:</p>
+                    <p>You currently have:</p>
 
-            <ul>
-                <li>@PendingAssignments pending assignments</li>
-                <li>@OverdueAssignments overdue assignments</li>
-                <li>@OpenCallings open callings</li>
-                <li>@FollowUpsNeeded follow-up items</li>
-            </ul>
+                    <ul>
+                        <li>@PendingAssignments pending assignments</li>
+                        <li>@OverdueAssignments overdue assignments</li>
+                        <li>@OpenCallings open callings</li>
+                        <li>@FollowUpsNeeded follow-up items</li>
+                    </ul>
 
-            <button class="btn btn-primary"
-                    @onclick="() => ShowNotification = false">
-                OK
-            </button>
-        </div>
-    </div>
-}
+                    <button class="btn btn-primary"
+                            @onclick="() => ShowNotification = false">
+                        OK
+                    </button>
+                </div>
+            </div>
+        }
+    </Authorized>
+</AuthorizeView>
