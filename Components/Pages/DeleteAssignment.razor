@@ -1,6 +1,12 @@
 @page "/assignments/delete/{id:int}"
 @rendermode InteractiveServer
 
+@* ==================================================
+    DELETE ASSIGNMENT PAGE
+    Displays assignment information and allows
+    authorized users to confirm deletion.
+   ================================================== *@
+
 @attribute [Authorize(Roles = "Admin,Leader")]
 @inject WardSyncService Service
 @inject NavigationManager Navigation
@@ -9,11 +15,13 @@
 
 @if (assignment is null)
 {
+    @* Display message if assignment cannot be found *@
     <p>Assignment not found.</p>
     <a class="btn-secondary" href="/assignments">Back to Assignments</a>
 }
 else
 {
+    @* Deletion confirmation section *@
     <div class="confirm-box">
         <p>Are you sure you want to delete this assignment?</p>
 
@@ -25,26 +33,35 @@ else
         <p><strong>Status:</strong> @assignment.Status</p>
 
         <div class="button-row">
+
+            @* Permanently delete assignment *@
             <button type="button" class="btn-delete" @onclick="DeleteConfirmed">
                 Yes, Delete
             </button>
 
+            @* Return to assignment list without deleting *@
             <a class="btn-secondary" href="/assignments">Cancel</a>
+
         </div>
     </div>
 }
 
 @code {
+
+    // Assignment ID received from the route parameter
     [Parameter]
     public int Id { get; set; }
 
+    // Stores the assignment selected for deletion
     private AssignmentItem? assignment;
 
+    // Load assignment details when page initializes
     protected override async Task OnInitializedAsync()
     {
         assignment = await Service.GetAssignmentByIdAsync(Id);
     }
 
+    // Delete the assignment and return to the assignments page
     private async Task DeleteConfirmed()
     {
         await Service.DeleteAssignmentAsync(Id);

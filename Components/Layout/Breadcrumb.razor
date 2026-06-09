@@ -20,114 +20,134 @@
 </nav>
 
 @code {
-    private readonly Dictionary<string, string> labelMap = new(StringComparer.OrdinalIgnoreCase)
+// Maps application routes to user-friendly breadcrumb names
+private readonly Dictionary<string, string> labelMap = new(StringComparer.OrdinalIgnoreCase)
+{
+    ["/"] = "Home",
+    ["/about"] = "About",
+    ["/dashboard"] = "Dashboard",
+    ["/assignments"] = "Assignments",
+    ["/assignments/create"] = "Create Assignment",
+    ["/assignments/details"] = "Assignment Details",
+    ["/assignments/edit"] = "Edit Assignment",
+    ["/assignments/delete"] = "Delete Assignment",
+    ["/callings"] = "Callings",
+    ["/followups"] = "Follow-Ups",
+    ["/reports"] = "Reports",
+    ["/members"] = "Members",
+    ["/weather"] = "Weather",
+    ["/login"] = "Login",
+    ["/logout"] = "Logout",
+    ["/access-denied"] = "Access Denied",
+    ["/auth"] = "Auth",
+    ["/Error"] = "Error"
+};
+
+// Stores the breadcrumb items displayed on the page
+private List<Crumb> crumbs = new();
+
+// Initialize breadcrumbs and subscribe to navigation events
+protected override void OnInitialized()
+{
+    BuildBreadcrumbs();
+    NavigationManager.LocationChanged += OnLocationChanged;
+}
+
+// Refresh breadcrumbs whenever the page URL changes
+private void OnLocationChanged(object? sender, LocationChangedEventArgs args)
+{
+    BuildBreadcrumbs();
+    InvokeAsync(StateHasChanged);
+}
+
+// Build breadcrumb trail from the current URL
+private void BuildBreadcrumbs()
+{
+    var absoluteUri = NavigationManager.Uri;
+    var relativePath = NavigationManager.ToBaseRelativePath(absoluteUri);
+    var path = relativePath.Split('?', '#')[0].Trim('/');
+    var baseUri = NavigationManager.BaseUri.TrimEnd('/');
+
+    // Always start with Home
+    crumbs = new List<Crumb>
     {
-        ["/"] = "Home",
-        ["/about"] = "About",
-        ["/dashboard"] = "Dashboard",
-        ["/assignments"] = "Assignments",
-        ["/assignments/create"] = "Create Assignment",
-        ["/assignments/details"] = "Assignment Details",
-        ["/assignments/edit"] = "Edit Assignment",
-        ["/assignments/delete"] = "Delete Assignment",
-        ["/callings"] = "Callings",
-        ["/followups"] = "Follow-Ups",
-        ["/reports"] = "Reports",
-        ["/members"] = "Members",
-        ["/weather"] = "Weather",
-        ["/login"] = "Login",
-        ["/logout"] = "Logout",
-        ["/access-denied"] = "Access Denied",
-        ["/auth"] = "Auth",
-        ["/Error"] = "Error"
+        new Crumb("Home", baseUri + "/", string.IsNullOrEmpty(path))
     };
 
-    private List<Crumb> crumbs = new();
-
-    protected override void OnInitialized()
+    if (string.IsNullOrEmpty(path))
     {
-        BuildBreadcrumbs();
-        NavigationManager.LocationChanged += OnLocationChanged;
+        return;
     }
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs args)
+    var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+    var currentPath = string.Empty;
+
+    for (var index = 0; index < segments.Length; index++)
     {
-        BuildBreadcrumbs();
-        InvokeAsync(StateHasChanged);
-    }
+        var segment = segments[index];
+        currentPath += "/" + segment;
 
-    private void BuildBreadcrumbs()
-    {
-        var absoluteUri = NavigationManager.Uri;
-        var relativePath = NavigationManager.ToBaseRelativePath(absoluteUri);
-        var path = relativePath.Split('?', '#')[0].Trim('/');
-        var baseUri = NavigationManager.BaseUri.TrimEnd('/');
+        var isLastSegment = index == segments.Length - 1;
+        var isNumericSegment = int.TryParse(segment, out _);
 
-        crumbs = new List<Crumb>
+        // Handle route IDs such as /assignments/details/1
+        if (isNumericSegment)
         {
-            new Crumb("Home", baseUri + "/", string.IsNullOrEmpty(path))
-        };
-
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
-        var segments = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
-        var currentPath = string.Empty;
-
-        for (var index = 0; index < segments.Length; index++)
-        {
-            var segment = segments[index];
-            currentPath += "/" + segment;
-            var isLastSegment = index == segments.Length - 1;
-            var isNumericSegment = int.TryParse(segment, out _);
-
-            if (isNumericSegment)
+            if (crumbs.Count > 1)
             {
-                if (crumbs.Count > 1)
-                {
-                    var prev = crumbs[^1];
-                    crumbs[^1] = prev with { Uri = baseUri + currentPath, Active = isLastSegment };
-                }
+                var prev = crumbs[^1];
 
-                continue;
+                crumbs[^1] = prev with
+                {
+                    Uri = baseUri + currentPath,
+                    Active = isLastSegment
+                };
             }
 
-            var active = isLastSegment;
-            var label = GetLabel(currentPath);
-            var crumbUri = active ? null : baseUri + currentPath;
-
-            crumbs.Add(new Crumb(label, crumbUri, active));
-        }
-    }
-
-    private string GetLabel(string path)
-    {
-        if (labelMap.TryGetValue(path, out var label))
-        {
-            return label;
+            continue;
         }
 
-        return ToTitleCase(path.Split('/').Last());
-    }
+        var active = isLastSegment;
+        var label = GetLabel(currentPath);
+        var crumbUri = active ? null : baseUri + currentPath;
 
-    private static string ToTitleCase(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return string.Empty;
-        }
-
-        value = value.Replace("-", " ");
-        return string.Join(' ', value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Select(word => char.ToUpperInvariant(word[0]) + word.Substring(1).ToLowerInvariant()));
-    }
-
-    private sealed record Crumb(string Name, string? Uri, bool Active);
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
+        crumbs.Add(new Crumb(label, crumbUri, active));
     }
 }
+
+// Retrieve a friendly label for the current route
+private string GetLabel(string path)
+{
+    if (labelMap.TryGetValue(path, out var label))
+    {
+        return label;
+    }
+
+    return ToTitleCase(path.Split('/').Last());
+}
+
+// Convert route segments into readable text
+private static string ToTitleCase(string value)
+{
+    if (string.IsNullOrWhiteSpace(value))
+    {
+        return string.Empty;
+    }
+
+    value = value.Replace("-", " ");
+
+    return string.Join(' ',
+        value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+             .Select(word =>
+                char.ToUpperInvariant(word[0]) +
+                word.Substring(1).ToLowerInvariant()));
+}
+
+// Record representing a single breadcrumb item
+private sealed record Crumb(string Name, string? Uri, bool Active);
+
+// Unsubscribe from navigation events when component is disposed
+public void Dispose()
+{
+    NavigationManager.LocationChanged -= OnLocationChanged;
+}       

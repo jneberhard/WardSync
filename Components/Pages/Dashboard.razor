@@ -1,10 +1,17 @@
 @page "/dashboard"
 @inject WardSyncService Service
 
+@* ==================================================
+    DASHBOARD PAGE
+    Displays summary statistics and upcoming
+    assignments for WardSync users.
+   ================================================== *@
+
 <PageTitle>Dashboard</PageTitle>
 
 <h1>WardSync Dashboard</h1>
 
+@* Dashboard summary cards *@
 <div class="dashboard-grid">
 
     <div class="card">
@@ -29,6 +36,7 @@
 
 </div>
 
+@* Upcoming assignments table *@
 <h2>Upcoming Assignments</h2>
 
 <table class="table">
@@ -56,14 +64,17 @@
 
 @code {
 
+    // Stores assignment and calling data retrieved from the database
     private List<AssignmentItem> assignments = new();
     private List<Calling> callings = new();
 
+    // Dashboard statistics
     private int openAssignments;
     private int completedAssignments;
     private int overdueAssignments;
     private int openCallings;
 
+    // Load dashboard data and calculate summary statistics
     protected override async Task OnInitializedAsync()
     {
         assignments = await Service.GetAssignmentsAsync();
@@ -71,7 +82,10 @@
 
         openAssignments = assignments.Count(a => a.Status == "Open");
         completedAssignments = assignments.Count(a => a.Status == "Completed");
-        overdueAssignments = assignments.Count(a => a.DueDate < DateTime.Today && a.Status != "Completed");
+        overdueAssignments = assignments.Count(a =>
+            a.DueDate < DateTime.Today &&
+            a.Status != "Completed");
+
         openCallings = callings.Count(c => c.Status == "Open");
     }
 }

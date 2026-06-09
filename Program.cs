@@ -7,13 +7,23 @@ using WardSync.Data;
 using WardSync.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// ==================================================
+// APPLICATION STARTUP CONFIGURATION
+// Configures services and dependency injection
+// for the WardSync application.
+// ==================================================
 // Add services to the container.
+
+// Register Razor Components and enable interactive
+// server-side rendering for Blazor components
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+// Configure authentication and authorization services
 builder.Services.AddCascadingAuthenticationState();
+// Handles redirects during authentication workflows
 builder.Services.AddScoped<IdentityRedirectManager>();
+// Revalidates user authentication state throughout the session
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
 builder.Services.AddAuthentication(options =>
@@ -45,7 +55,7 @@ builder.Services.AddScoped<CalendarExportService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
@@ -53,7 +63,7 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    // The default HSTS value is 30 days. 
     app.UseHsts();
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
@@ -65,7 +75,7 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-// Add additional endpoints required by the Identity /Account Razor components.
+// Added additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
 
 await IdentitySeedData.SeedRolesAndUsersAsync(app.Services);
