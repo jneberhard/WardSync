@@ -11,6 +11,8 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  azureSubscription: 'wardsync2026'
+  appName: 'wardsync2026'
   projectPath: 'WardSync.csproj'
 
 steps:
@@ -37,3 +39,11 @@ steps:
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/wardsync.zip'
     replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: 'wardsync2026'
+    appType: 'webApp'
+    appName: 'wardsync2026'
+    package: '$(Build.ArtifactStagingDirectory)/wardsync.zip'
