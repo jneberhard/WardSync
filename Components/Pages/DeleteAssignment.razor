@@ -1,5 +1,10 @@
 @page "/assignments/delete/{id:int}"
 @rendermode InteractiveServer
+@* ==================================================
+    DELETE ASSIGNMENT PAGE
+    Displays assignment information and allows
+    authorized users to confirm deletion.
+   ================================================== *@
 
 @attribute [Authorize(Roles = "Admin,Leader")]
 @inject WardSyncService Service
@@ -35,16 +40,20 @@ else
 }
 
 @code {
+    // Assignment ID received from the route parameter
     [Parameter]
     public int Id { get; set; }
 
+    // Stores the assignment selected for deletion
     private AssignmentItem? assignment;
 
+    // Load assignment details when page initializes
     protected override async Task OnInitializedAsync()
     {
         assignment = await Service.GetAssignmentByIdAsync(Id);
     }
 
+    // Delete the assignment and return to the assignments page
     private async Task DeleteConfirmed()
     {
         await Service.DeleteAssignmentAsync(Id);
