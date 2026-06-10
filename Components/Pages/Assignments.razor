@@ -1,11 +1,18 @@
 @page "/assignments"
 @rendermode InteractiveServer
 
+@* ==================================================
+   ASSIGNMENTS MANAGEMENT PAGE
+   Displays all assignments, supports searching,
+   filtering, viewing, editing, and deleting.
+   ================================================== *@
+
 @attribute [Authorize(Roles = "Admin,Leader")]
 @inject WardSyncService Service
 
 <h1>Manage Assignments</h1>
 
+@* Navigation button for creating a new assignment *@
 <div class="button-row">
     <a class="btn-primary" href="/assignments/create">
         Create Assignment
@@ -14,12 +21,13 @@
 
 <hr />
 
+@* Search and status filtering controls *@
 <div class="filter-row">
     <div class="search-box">
         <span class="search-icon">🔍</span>
 
         <InputText @bind-Value="searchText"
-                   placeholder="Search assignments..." />
+                    placeholder="Search assignments..." />
     </div>
 
     <InputSelect @bind-Value="statusFilter">
@@ -30,6 +38,7 @@
     </InputSelect>
 </div>
 
+@* Assignment listing table *@
 <table class="table">
     <thead>
         <tr>
@@ -54,10 +63,13 @@
                 <td>@assignment.Priority</td>
                 <td>@assignment.Status</td>
                 <td>
+                    @* View assignment details *@
                     <a class="btn-view" href="/assignments/details/@assignment.Id">View</a>
 
+                    @* Edit assignment *@
                     <a class="btn-edit" href="/assignments/edit/@assignment.Id">Edit</a>
 
+                    @* Display delete confirmation dialog *@
                     <button type="button"
                             class="btn-delete"
                             @onclick="() => ShowDeletePopup(assignment)">
@@ -69,6 +81,7 @@
     </tbody>
 </table>
 
+@* Delete confirmation popup *@
 @if (showDeleteConfirmation && assignmentToDelete is not null)
 {
     <div class="modal-overlay">
@@ -99,33 +112,44 @@
         </div>
     </div>
 }
+
 @code {
+
+    // Stores all assignments retrieved from the database
     private List<AssignmentItem> assignments = new();
 
+    // Search text entered by the user
     private string searchText = string.Empty;
 
+    // Selected status filter value
     private string statusFilter = string.Empty;
-    
+
+    // Controls visibility of delete confirmation dialog
     private bool showDeleteConfirmation;
 
+    // Stores the assignment selected for deletion
     private AssignmentItem? assignmentToDelete;
 
+    // Load assignments when the page initializes
     protected override async Task OnInitializedAsync()
     {
         await LoadAssignments();
     }
 
+    // Retrieve assignments from the database
     private async Task LoadAssignments()
     {
         assignments = await Service.GetAssignmentsAsync();
     }
 
+    // Returns filtered and sorted assignments
     private IEnumerable<AssignmentItem> FilteredAssignments
     {
         get
         {
             var query = assignments.AsEnumerable();
 
+            // Apply search filter
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 query = query.Where(a =>
@@ -136,37 +160,42 @@
                     a.Status.Contains(searchText, StringComparison.OrdinalIgnoreCase));
             }
 
+            // Apply status filter
             if (!string.IsNullOrWhiteSpace(statusFilter))
             {
                 query = query.Where(a => a.Status == statusFilter);
             }
 
+            // Sort assignments by due date
             return query.OrderBy(a => a.DueDate);
-            }
-        }
-
-        private void ShowDeletePopup(AssignmentItem assignment)
-        {
-            assignmentToDelete = assignment;
-            showDeleteConfirmation = true;
-        }
-
-        private async Task ConfirmDelete()
-        {
-            if (assignmentToDelete is not null)
-            {
-                await Service.DeleteAssignmentAsync(assignmentToDelete.Id);
-
-                showDeleteConfirmation = false;
-                assignmentToDelete = null;
-
-                await LoadAssignments();
-            }
-        }
-
-        private void CancelDelete()
-        {
-            showDeleteConfirmation = false;
-            assignmentToDelete = null;
         }
     }
+
+    // Display delete confirmation popup
+    private void ShowDeletePopup(AssignmentItem assignment)
+    {
+        assignmentToDelete = assignment;
+        showDeleteConfirmation = true;
+    }
+
+    // Delete selected assignment and refresh table
+    private async Task ConfirmDelete()
+    {
+        if (assignmentToDelete is not null)
+        {
+            await Service.DeleteAssignmentAsync(assignmentToDelete.Id);
+
+            showDeleteConfirmation = false;
+            assignmentToDelete = null;
+
+            await LoadAssignments();
+        }
+    }
+
+    // Close delete confirmation popup without deleting
+    private void CancelDelete()
+    {
+        showDeleteConfirmation = false;
+        assignmentToDelete = null;
+    }
+}
