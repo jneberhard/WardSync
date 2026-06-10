@@ -13,7 +13,7 @@
 @inject ILogger<EnableAuthenticator> Logger
 
 <PageTitle>Configure authenticator app</PageTitle>
-
+@* Configure authenticator app *@
 @if (recoveryCodes is not null)
 {
     <ShowRecoveryCodes RecoveryCodes="recoveryCodes.ToArray()" StatusMessage="@message" />
@@ -23,6 +23,7 @@ else
     <StatusMessage Message="@message" />
     <h3>Configure authenticator app</h3>
     <div>
+        @* steps for configuring authenticator app *@
         <p>To use an authenticator app go through the following steps:</p>
         <ol class="list">
             <li>

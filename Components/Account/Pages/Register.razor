@@ -122,7 +122,7 @@
     {
         var user = CreateUser();
 
-        // Map properties out of your user interface data models and onto your custom tracking entity!
+        // Map properties out of user interface data models and onto custom tracking entity
         user.FirstName = Input.FirstName;
         user.LastName = Input.LastName;
         user.IsApproved = false; // new users have to be approved by an admin before they can sign in
@@ -214,6 +214,7 @@
     }
 }
 
+@* Password visibility toggle script *@
 <script>
     function togglePasswordVisibility(fieldIdOrElem, btnOrElem) {
         const field = typeof fieldIdOrElem === 'string' ? document.getElementById(fieldIdOrElem) : fieldIdOrElem;
