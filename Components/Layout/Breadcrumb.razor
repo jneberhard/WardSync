@@ -1,13 +1,23 @@
 @implements IDisposable
 @inject NavigationManager NavigationManager
 
+@* ==================================================
+    BREADCRUMB COMPONENT
+    Dynamically generates navigation breadcrumbs
+    based on the current page route.
+   ================================================== *@
+
 <nav aria-label="breadcrumb" class="breadcrumbs">
     <ol class="breadcrumb">
+
+        @* Display breadcrumb navigation items *@
         @foreach (var crumb in crumbs)
         {
             if (crumb.Active)
             {
-                <li class="breadcrumb-item active" aria-current="page">@crumb.Name</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    @crumb.Name
+                </li>
             }
             else
             {
@@ -16,46 +26,54 @@
                 </li>
             }
         }
+
     </ol>
 </nav>
 
 @code {
-    private readonly Dictionary<string, string> labelMap = new(StringComparer.OrdinalIgnoreCase)
-    {
-        ["/"] = "Home",
-        ["/about"] = "About",
-        ["/dashboard"] = "Dashboard",
-        ["/assignments"] = "Assignments",
-        ["/assignments/create"] = "Create Assignment",
-        ["/assignments/details"] = "Assignment Details",
-        ["/assignments/edit"] = "Edit Assignment",
-        ["/assignments/delete"] = "Delete Assignment",
-        ["/callings"] = "Callings",
-        ["/followups"] = "Follow-Ups",
-        ["/reports"] = "Reports",
-        ["/members"] = "Members",
-        ["/weather"] = "Weather",
-        ["/login"] = "Login",
-        ["/logout"] = "Logout",
-        ["/access-denied"] = "Access Denied",
-        ["/auth"] = "Auth",
-        ["/Error"] = "Error"
-    };
 
+    // Maps application routes to friendly breadcrumb labels
+    private readonly Dictionary<string, string> labelMap =
+        new(StringComparer.OrdinalIgnoreCase)
+        {
+            ["/"] = "Home",
+            ["/about"] = "About",
+            ["/dashboard"] = "Dashboard",
+            ["/assignments"] = "Assignments",
+            ["/assignments/create"] = "Create Assignment",
+            ["/assignments/details"] = "Assignment Details",
+            ["/assignments/edit"] = "Edit Assignment",
+            ["/assignments/delete"] = "Delete Assignment",
+            ["/callings"] = "Callings",
+            ["/followups"] = "Follow-Ups",
+            ["/reports"] = "Reports",
+            ["/members"] = "Members",
+            ["/weather"] = "Weather",
+            ["/login"] = "Login",
+            ["/logout"] = "Logout",
+            ["/access-denied"] = "Access Denied",
+            ["/auth"] = "Auth",
+            ["/Error"] = "Error"
+        };
+
+    // Stores the breadcrumb items displayed on the page
     private List<Crumb> crumbs = new();
 
+    // Initialize breadcrumbs and subscribe to navigation events
     protected override void OnInitialized()
     {
         BuildBreadcrumbs();
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
+    // Rebuild breadcrumbs when the user navigates to a new page
     private void OnLocationChanged(object? sender, LocationChangedEventArgs args)
     {
         BuildBreadcrumbs();
         InvokeAsync(StateHasChanged);
     }
 
+    // Generate breadcrumb items from the current URL
     private void BuildBreadcrumbs()
     {
         var absoluteUri = NavigationManager.Uri;
@@ -80,15 +98,22 @@
         {
             var segment = segments[index];
             currentPath += "/" + segment;
+
             var isLastSegment = index == segments.Length - 1;
             var isNumericSegment = int.TryParse(segment, out _);
 
+            // Handle route IDs such as /assignments/details/5
             if (isNumericSegment)
             {
                 if (crumbs.Count > 1)
                 {
                     var prev = crumbs[^1];
-                    crumbs[^1] = prev with { Uri = baseUri + currentPath, Active = isLastSegment };
+
+                    crumbs[^1] = prev with
+                    {
+                        Uri = baseUri + currentPath,
+                        Active = isLastSegment
+                    };
                 }
 
                 continue;
@@ -102,6 +127,7 @@
         }
     }
 
+    // Retrieve a friendly label for the current route
     private string GetLabel(string path)
     {
         if (labelMap.TryGetValue(path, out var label))
@@ -112,6 +138,7 @@
         return ToTitleCase(path.Split('/').Last());
     }
 
+    // Convert route names into readable text
     private static string ToTitleCase(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
@@ -120,12 +147,18 @@
         }
 
         value = value.Replace("-", " ");
-        return string.Join(' ', value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-            .Select(word => char.ToUpperInvariant(word[0]) + word.Substring(1).ToLowerInvariant()));
+
+        return string.Join(' ',
+            value.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(word =>
+                    char.ToUpperInvariant(word[0]) +
+                    word.Substring(1).ToLowerInvariant()));
     }
 
+    // Breadcrumb record used to store navigation information
     private sealed record Crumb(string Name, string? Uri, bool Active);
 
+    // Clean up event subscription when component is disposed
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
