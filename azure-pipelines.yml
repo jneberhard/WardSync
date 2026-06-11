@@ -1,0 +1,49 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  azureSubscription: 'wardsync2026-publish'
+  appName: 'wardsync2026'
+  projectPath: 'WardSync.csproj'
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET SDK'
+  inputs:
+    packageType: 'sdk'
+    version: '10.0.x'
+
+- script: dotnet restore $(projectPath)
+  displayName: 'Restore'
+
+- script: dotnet build $(projectPath) --configuration $(buildConfiguration) --no-restore
+  displayName: 'Build'
+
+- script: dotnet publish $(projectPath) --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/publish
+  displayName: 'Publish'
+
+- task: ArchiveFiles@2
+  displayName: 'Create deployment zip'
+  inputs:
+    rootFolderOrFile: '$(Build.ArtifactStagingDirectory)/publish'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/wardsync.zip'
+    replaceExistingArchive: true
+
+- task: AzureWebApp@1
+  displayName: 'Deploy to Azure App Service'
+  inputs:
+    azureSubscription: 'wardsync2026-publish'
+    appType: 'webApp'
+    appName: 'wardsync2026'
+    package: '$(Build.ArtifactStagingDirectory)/wardsync.zip'
