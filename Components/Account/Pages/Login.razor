@@ -17,6 +17,7 @@
 <div class="row">
     <div class="col-lg-6">
         <section>
+            @* displays error messages*@
             <StatusMessage Message="@errorMessage" />
             <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
@@ -86,7 +87,7 @@
             </EditForm>
         </section>
     </div>
-    @* Commented out until we configure external authentication providers
+    @*  Commented out until we configure external authentication providers
     <div class="col-lg-4 col-lg-offset-2">
         <section>
             <h3>Use another service to log in.</h3>

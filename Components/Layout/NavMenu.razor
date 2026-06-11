@@ -28,7 +28,7 @@
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
             </NavLink>
         </div>
-
+        @* User Management *@
         <AuthorizeView Roles="Admin">
             <Authorized>
                 <div class="nav-item px-3">
@@ -39,6 +39,7 @@
             </Authorized>
         </AuthorizeView>
 
+        @* Callings*@
         <AuthorizeView Roles="Admin">
             <Authorized>
                 <div class="nav-item px-3">
@@ -49,6 +50,7 @@
             </Authorized>
         </AuthorizeView>
 
+        @* Assignments*@
         <AuthorizeView Roles="Admin,Leader">
             <Authorized>
                 <div class="nav-item px-3">
@@ -59,6 +61,7 @@
             </Authorized>
         </AuthorizeView>
 
+        @* Follow-Ups *@
         <AuthorizeView Roles="Admin,Leader">
             <Authorized>
                 <div class="nav-item px-3">
@@ -69,6 +72,7 @@
             </Authorized>
         </AuthorizeView>
 
+        @* Members *@
         <AuthorizeView Roles="Admin,Leader,Viewer">
             <Authorized>
                 <div class="nav-item px-3">
@@ -79,7 +83,8 @@
             </Authorized>
         </AuthorizeView>
 
-        <AuthorizeView Roles="Admin,Leader">
+        @* Reporting *@
+        <AuthorizeView Roles="Admin, Leader">
             <Authorized>
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="reports">
@@ -91,6 +96,8 @@
 
         <AuthorizeView Roles="Admin">
             <Authorized>
+
+                @* User Management  *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Admin/ManageUsers">
                         <div class="d-flex align-items-center justify-content-between w-100">
@@ -106,6 +113,8 @@
                         </div>
                     </NavLink>
                 </div>
+
+                @* Active Roster *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Admin/UserList">
                         <span class="bi bi-people-fill" aria-hidden="true"></span> Active Roster
@@ -118,11 +127,14 @@
             <Authorized>
                 <p class="nav-section-label">Account</p>
 
+                @* Profile Management *@
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Manage">
                         <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
                     </NavLink>
                 </div>
+
+                @* Logout*@
                 <div class="nav-item px-3">
                     <form action="Account/Logout" method="post">
                         <AntiforgeryToken />

@@ -49,6 +49,14 @@
                                 </Authorized>
                             </AuthorizeView>
 
+
+                            <AuthorizeView Roles="Admin" Context="reportAuth">
+                                <Authorized>
+                                    <a class="home-button" href="/admin/ManageUsers">Approve Users</a>
+                                    <a class="home-button" href="/admin/userList">Active Roster</a>
+                                </Authorized>
+                            </AuthorizeView>
+
                             <form class="home-logout-form" action="Account/Logout" method="post">
                                 <AntiforgeryToken />
                                 <input type="hidden" name="ReturnUrl" value="" />
