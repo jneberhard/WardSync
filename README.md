@@ -368,9 +368,9 @@ If the local database is out of sync and the data is only test data, delete the 
 * Run `dotnet build` to check for compile errors.
 * Check the terminal output for error messages.
 
-## Final Video
+## Demo Video
 
-Final video link: To be added before final submission.
+Final video link: https://youtu.be/qTAyHuUp6l4
 
 ## Notes
 
