@@ -372,7 +372,7 @@ If the local database is out of sync and the data is only test data, delete the 
 
 ## Demo Video
 
-Final video link: https://youtu.be/qTAyHuUp6l4
+Video link: https://youtu.be/qTAyHuUp6l4
 
 ## Notes
 
